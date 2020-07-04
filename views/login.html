@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login</title>
+    <meta charset="utf-8">
+    <link href="css/style.css" rel='stylesheet' type='text/css' />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="application/x-javascript">
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
+</head>
+
+<body>
+    <!-----start-main---->
+    <div class="main">
+        <div class="login-form">
+            <h1>Member Login</h1>
+            <div class="head">
+                <img src="images/user.png" alt="" />
+            </div>
+
+            <form>
+
+                <input type="text" name="username" id="username" class="text" value="USERNAME" onfocus="this.value = '';"
+                    onblur="if (this.value == '') {this.value = 'USERNAME';}">
+
+                <input type="password" name="password" id="password" value="Password" onfocus="this.value = '';"
+                    onblur="if (this.value == '') {this.value = 'Password';}">
+
+                <div class="submit">
+                    <input type="submit"  value="LOGIN">
+                </div>
+
+                <p><a href="#">Forgot Password ?</a></p>
+            </form>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(function(){
+            // 监听表单提交
+
+            $("form").submit(function(){
+
+                // 获取表单数据
+                let username = $("#username").val()
+                let password = $("#password").val()
+
+
+                // 验证规范性
+                let regx =/^[1-9a-zA-Z_]{6,12}$/
+
+                if(!regx.test(username)){
+                    alert('用户名填写不规范，6-12位字母或者下划线')
+                    return false
+                }else if (!regx.test(password)) {
+                    alert('密码填写不规范，6-12位字母或者下划线')
+                    return false
+                }else{
+
+                    // 模拟form表单（常用方式）
+                    let formData = new FormData()
+                    // 把表单数据附加到formData
+                    formData.append('uname',username)
+                    formData.append('upassword',password)
+
+                    // 通过ajax提交表单数据到后端
+                    $.ajax({
+                        url:'loginDoAsync',
+                        method:'post',
+                        data:formData,
+                        // 服务器返回的类型json,html,xml
+                        dataType:'json',
+                        // 客户端给服务端发送的数据，因为有文件，所以要取消(不固定前端发送给后端的数据类型)
+                        contentType:false,
+                        // 默认true，不要序列化表单数据，文件就不能序列化
+                        processData:false,
+                        success:function(res){
+                            if(!res.res){
+                                alert('用户名或密码错误')
+                            }
+                        }
+                    })
+                }
+
+                return false
+            })
+            
+        })
+
+    </script>
+</body>
+
+</html>
