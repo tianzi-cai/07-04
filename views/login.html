@@ -4,7 +4,7 @@
 <head>
     <title>Login</title>
     <meta charset="utf-8">
-    <link href="css/style.css" rel='stylesheet' type='text/css' />
+    <link href="../css/style.css" rel='stylesheet' type='text/css' />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="application/x-javascript">
         addEventListener("load", function () {
@@ -23,7 +23,7 @@
         <div class="login-form">
             <h1>Member Login</h1>
             <div class="head">
-                <img src="images/user.png" alt="" />
+                <img src="../images/user.png" alt="" />
             </div>
 
             <form>
@@ -47,6 +47,8 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         $(function(){
+            
+            
             // 监听表单提交
 
             $("form").submit(function(){
@@ -79,15 +81,20 @@
                         method:'post',
                         data:formData,
                         // 服务器返回的类型json,html,xml
-                        dataType:'json',
+                        dataType:'text',
                         // 客户端给服务端发送的数据，因为有文件，所以要取消(不固定前端发送给后端的数据类型)
                         contentType:false,
                         // 默认true，不要序列化表单数据，文件就不能序列化
                         processData:false,
                         success:function(res){
-                            if(!res.res){
-                                alert('用户名或密码错误')
+                            if(res == 'success'){
+                                // 跳转到后台首页
+                                window.location.href="../admin"
+                            }else{
+                                alert('登录失败，请检查！')
                             }
+
+                            console.log(res)
                         }
                     })
                 }

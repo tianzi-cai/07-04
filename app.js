@@ -1,4 +1,3 @@
-const { setegid } = require('process');
 
 // 引入模块
 const Koa = require('koa'),
@@ -8,11 +7,15 @@ const Koa = require('koa'),
     koaBody = require('koa-body'),
     static = require('koa-static'),
     session = require('koa-session'),
-    Index = require('./router/home')
+    Index = require('./router/home'),
+    fs =require('fs'),
+    admin = require('./router/admin'),
+    member = require('./router/member')
 
 // 实例化
 const app = new Koa()
 
+/////////////////////////////////////////////////////////////////////////////////////////
 // 模版
 render(app, {
     root: path.join(__dirname, 'views'),
@@ -49,48 +52,13 @@ const CONFIG = {
  
 app.use(session(CONFIG, app));
 
-
+//////////////////////////////////////////////////
 // 路由
-router.get('/',ctx =>{
-    ctx.render('login')
-})
+router.use('/admin',admin)
+router.use('/member',member)
 
 
-// 表单异步接收
-router.post('/loginDoAsync',ctx=>{
-
-    // 后台获取输入的用户名和密码
-    let {uname,upassword}=ctx.request.body
-
-    let res
-    
-    if(uname=='tianzi'&&upassword==123456){
-
-        // 用户名密码加入session缓存中
-        ctx.session.uname =uname
-        ctx.session.upassword =upassword
-        
-        res =true
-
-    }else{
-        res =false
-    }
-
-    ctx.body ={res}
-
-})
-
-// 路由中间件
-router.use(async(ctx,next)=>{
-    if(ctx.session.uname=='tianzi'){
-        next()
-    }else{
-        ctx.redirect('/')
-    }
-})
-
-router.use('/home',Index)
-
+///////////////////////////////////////////////////////
 // 路由中间件，一定要放到最后，配置下的最后
 app.use(router.routes())
     .use(router.allowedMethods())
